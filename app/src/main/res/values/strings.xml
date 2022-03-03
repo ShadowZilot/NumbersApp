@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">NumberApp</string>
+    <string name="this_day_in_history_label">This day in history</string>
+    <string name="next_fact_label">Next fact</string>
+    <string name="no_internet_message">No internet!</string>
+</resources>
