@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity(), OnFactFetchedListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mViewModel = ViewModelProvider(
-            this, MainVMFactory()
+            this, ViewModelProvider.NewInstanceFactory()
         )[MainViewModel::class.java]
         mContent = findViewById(R.id.mainContent)
         mLoading = findViewById(R.id.loading)
@@ -30,20 +30,24 @@ class MainActivity : AppCompatActivity(), OnFactFetchedListener {
     }
 
     override fun onFetched(fact: DateFact) {
-        mLoading.visibility = View.GONE
-        mContent.visibility = View.VISIBLE
-        mError.visibility = View.GONE
-        fact.map(object : DateFact.Mapper<Unit> {
-            override fun map(fact: String) {
-                mContent.findViewById<TextView>(R.id.textFact).text = fact
-            }
-        })
+        runOnUiThread {
+            mLoading.visibility = View.GONE
+            mContent.visibility = View.VISIBLE
+            mError.visibility = View.GONE
+            fact.map(object : DateFact.Mapper<Unit> {
+                override fun map(fact: String) {
+                    mContent.findViewById<TextView>(R.id.textFact).text = fact
+                }
+            })
+        }
     }
 
     override fun onError() {
-        mLoading.visibility = View.GONE
-        mContent.visibility = View.GONE
-        mError.visibility = View.VISIBLE
+        runOnUiThread {
+            mLoading.visibility = View.GONE
+            mContent.visibility = View.GONE
+            mError.visibility = View.VISIBLE
+        }
     }
 
     private fun startLoading() {
